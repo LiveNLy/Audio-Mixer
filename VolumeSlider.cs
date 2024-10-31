@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
@@ -10,8 +9,6 @@ public class VolumeSlider : MonoBehaviour
 
     private Slider _volumeSlider;
     private float _numberForCorrection = 20;
-
-    public event Action OnVolumeChanging;
 
     private void Awake()
     {
@@ -30,7 +27,6 @@ public class VolumeSlider : MonoBehaviour
 
     private void ChangeVolume(float sliderValue)
     {
-        OnVolumeChanging?.Invoke();
         _mixer.audioMixer.SetFloat(_volumeSlider.name, Mathf.Log10(sliderValue) * _numberForCorrection);
 
         if (sliderValue == 0)
