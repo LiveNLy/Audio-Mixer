@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
@@ -6,16 +7,33 @@ using UnityEngine.UI;
 public class VolumeSlider : MonoBehaviour
 {
     [SerializeField] private AudioMixerGroup _mixer;
-    
+
     private Slider _volumeSlider;
+    private float _numberForCorrection = 20;
+
+    public event Action OnVolumeChanging;
 
     private void Awake()
     {
         _volumeSlider = GetComponent<Slider>();
     }
 
-    public void ChangeVolume(string parameterName)
+    private void OnEnable()
     {
-        _mixer.audioMixer.SetFloat(parameterName, Mathf.Log10(_volumeSlider.value) * 20);
+        _volumeSlider.onValueChanged.AddListener(ChangeVolume);
+    }
+
+    private void OnDisable()
+    {
+        _volumeSlider.onValueChanged.RemoveListener(ChangeVolume);
+    }
+
+    private void ChangeVolume(float sliderValue)
+    {
+        OnVolumeChanging?.Invoke();
+        _mixer.audioMixer.SetFloat(_volumeSlider.name, Mathf.Log10(sliderValue) * _numberForCorrection);
+
+        if (sliderValue == 0)
+            _mixer.audioMixer.SetFloat(_volumeSlider.name, -80);
     }
 }
