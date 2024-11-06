@@ -24,11 +24,11 @@ public class MuteButton : MonoBehaviour
     {
         if (_isEnabled == false)
         {
-            _listener.gameObject.SetActive(true);
+            _listener.enabled = true;
         }
         else
         {
-            _listener?.gameObject.SetActive(false);
+            _listener.enabled = false;
         }
 
         _isEnabled = !_isEnabled;
